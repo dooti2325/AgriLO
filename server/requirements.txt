@@ -9,6 +9,8 @@ python-multipart
 # Database
 sqlmodel
 aiosqlite
+asyncpg
+psycopg2-binary
 
 # Authentication
 python-jose[cryptography]

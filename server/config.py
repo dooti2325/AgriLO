@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     """Application configuration settings."""
     
     # Database
+    # Default to SQLite for local development if DATABASE_URL is not set
     DATABASE_URL: str = "sqlite+aiosqlite:///./farming.db"
     
     # Security
@@ -36,7 +37,12 @@ class Settings(BaseSettings):
     ROOT_CLASS_INDICES_PATH: str = os.path.join(BASE_DIR, "models/root_class_indices.json")
     
     # CORS
-    CORS_ORIGINS: list = ["http://localhost:5173", "http://localhost:3000","https://agri-lo-ivory.vercel.app/"]
+    CORS_ORIGINS: list = [
+        "http://localhost:5173", 
+        "http://localhost:3000",
+        "https://agri-lo-ivory.vercel.app",
+        "https://agri-lo.vercel.app"
+    ]
     
     # App Info
     APP_NAME: str = "Agri-Lo API"
@@ -44,7 +50,7 @@ class Settings(BaseSettings):
     DEBUG: bool = True
 
     # MQTT Hardware
-    MQTT_BROKER: str = "localhost"
+    MQTT_BROKER: str = os.getenv("MQTT_BROKER", "localhost")
     MQTT_PORT: int = 1883
     MQTT_TOPIC: str = "farm/soil/node01/data"
     SOIL_RAW_SCALE: float = 0.1 # Raw 800 -> 80 mg/kg
