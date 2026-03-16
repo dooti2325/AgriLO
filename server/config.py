@@ -12,6 +12,10 @@ class Settings(BaseSettings):
     # Default to SQLite for local development if DATABASE_URL is not set
     DATABASE_URL: str = "sqlite+aiosqlite:///./farming.db"
     
+    # Supabase (Optional SDK usage)
+    SUPABASE_URL: Optional[str] = None
+    SUPABASE_KEY: Optional[str] = None
+    
     # Security
     SECRET_KEY: str = "your-secret-key-change-in-production"
     ALGORITHM: str = "HS256"
