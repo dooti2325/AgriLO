@@ -1,5 +1,6 @@
 import os
 os.environ["TF_USE_LEGACY_KERAS"] = "0"
+
 import keras
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -17,25 +18,29 @@ from database import init_db
 from config import settings
 from services.mqtt import mqtt_service
 
-# Create FastAPI app
+# ------------------ Create App ------------------
+
 app = FastAPI(
     title="Agri-Lo API",
     description="Backend for Agri-Lo Smart Farming App"
 )
 
-# Initialize Limiter
-app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
-
-# ------------------ CORS (ADD THIS FIRST) ------------------
+# ------------------ ✅ CORS FIRST (VERY IMPORTANT) ------------------
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=[
+        "https://agri-lo-six.vercel.app",  # your frontend
+    ],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["*"],   # allow all methods (fixes OPTIONS issue)
     allow_headers=["*"],
 )
+
+# ------------------ Limiter AFTER CORS ------------------
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # ------------------ Startup / Shutdown ------------------
 
@@ -64,6 +69,8 @@ app.include_router(chat.router, prefix="/api/chat", tags=["Chat"])
 app.include_router(users.router, prefix="/api/users", tags=["Users"])
 app.include_router(soil_data.router, prefix="/api/soil", tags=["Soil Data"])
 app.include_router(appointments.router, prefix="/api/appointments", tags=["Appointments"])
+
+# ------------------ Root ------------------
 
 @app.get("/")
 async def root():
