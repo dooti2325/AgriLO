@@ -25,15 +25,13 @@ app = FastAPI(
     description="Backend for Agri-Lo Smart Farming App"
 )
 
-# ------------------ ✅ CORS FIRST (VERY IMPORTANT) ------------------
+# ------------------ CORS (ADD THIS FIRST) ------------------
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://agri-lo-six.vercel.app",  # your frontend
-    ],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],   # allow all methods (fixes OPTIONS issue)
+    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allow_headers=["*"],
 )
 
