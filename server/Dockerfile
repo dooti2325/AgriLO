@@ -1,35 +1,54 @@
-# Stage 1: Builder
+# Stage 1: Build stage
 FROM python:3.10-slim as builder
 
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
 WORKDIR /app
 
-# Install build dependencies
-RUN apt-get update && apt-get install -y \
+# Install system build dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
+    libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Install dependencies to a temporary location
-COPY requirements.txt .
-RUN pip install --prefix=/install --no-cache-dir -r requirements.txt
+# Create virtualenv to isolate dependencies
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
 
-# Stage 2: Final Runtime
+# Install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Stage 2: Final Runtime stage
 FROM python:3.10-slim
+
+# Set environment variables
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+ENV PATH="/opt/venv/bin:$PATH"
+ENV PORT=8000
 
 WORKDIR /app
 
-# Install runtime system dependencies
-RUN apt-get update && apt-get install -y \
+# Install runtime system dependencies (libpq for postgreSQL if needed, and sqlite is built-in)
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    libpq5 \
     ca-certificates \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy installed python dependencies from builder
-COPY --from=builder /install /usr/local
+# Copy virtualenv from builder
+COPY --from=builder /opt/venv /opt/venv
 
 # Copy application code
 COPY . .
 
-# Expose port
-EXPOSE 5000
+# Ensure scripts are executable
+RUN chmod +x entrypoint.sh
 
-# Startup command
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
+# Expose port (using default 8000 for FastAPI instead of 5000)
+EXPOSE 8000
+
+# Set entrypoint
+ENTRYPOINT ["./entrypoint.sh"]
