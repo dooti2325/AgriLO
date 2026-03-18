@@ -42,8 +42,6 @@ httpx
 # Payments
 razorpay
 
-# Firebase
-firebase-admin
 
 # Rate limiting
 slowapi

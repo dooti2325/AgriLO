@@ -32,11 +32,9 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "https://agri-lo-six.vercel.app"  # keep exact origin only
-    ],
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],  # important
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 

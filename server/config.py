@@ -1,5 +1,6 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from functools import lru_cache
+from typing import Optional
 import os
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -8,9 +9,7 @@ class Settings(BaseSettings):
     """Application configuration settings."""
     
     # Database
-    # Default to SQLite for local development if DATABASE_URL is not set
     DATABASE_URL: str = "sqlite+aiosqlite:///./farming.db"
-    
 
     
     # Security
