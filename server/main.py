@@ -1,13 +1,14 @@
-
 import os
-
 import keras
-from fastapi import FastAPI
+
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.responses import JSONResponse
+
 from utils.limiter import limiter
-from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+
 import uvicorn
 
 from routers import (
@@ -18,6 +19,7 @@ from database import init_db
 from config import settings
 from services.mqtt import mqtt_service
 
+
 # ------------------ Create App ------------------
 
 app = FastAPI(
@@ -25,20 +27,56 @@ app = FastAPI(
     description="Backend for Agri-Lo Smart Farming App"
 )
 
-# ------------------ CORS (ADD THIS FIRST) ------------------
+
+# ------------------ CORS (FIXED) ------------------
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.CORS_ORIGINS,
+    allow_origins=[
+        "https://agri-lo-six.vercel.app"  # keep exact origin only
+    ],
     allow_credentials=True,
-    allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allow_methods=["*"],  # important
     allow_headers=["*"],
 )
 
-# ------------------ Limiter AFTER CORS ------------------
+
+# ------------------ PREVENT OPTIONS ISSUES ------------------
+
+@app.options("/{full_path:path}")
+async def preflight_handler():
+    return {"ok": True}
+
+
+# ------------------ LIMITER SETUP (FIXED) ------------------
 
 app.state.limiter = limiter
-app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
+
+@app.exception_handler(RateLimitExceeded)
+async def rate_limit_handler(request: Request, exc):
+    return JSONResponse(
+        status_code=429,
+        content={"detail": "Too many requests"},
+        headers={
+            "Access-Control-Allow-Origin": request.headers.get("origin", "*"),
+            "Access-Control-Allow-Credentials": "true",
+        }
+    )
+
+
+# ------------------ GLOBAL ERROR HANDLER (VERY IMPORTANT) ------------------
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request: Request, exc):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": str(exc)},
+        headers={
+            "Access-Control-Allow-Origin": request.headers.get("origin", "*"),
+            "Access-Control-Allow-Credentials": "true",
+        }
+    )
+
 
 # ------------------ Startup / Shutdown ------------------
 
@@ -51,10 +89,12 @@ async def start_db():
 async def shutdown():
     mqtt_service.stop()
 
+
 # ------------------ Static Files ------------------
 
 os.makedirs("static/uploads", exist_ok=True)
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
 
 # ------------------ Routers ------------------
 
@@ -68,11 +108,13 @@ app.include_router(users.router, prefix="/api/users", tags=["Users"])
 app.include_router(soil_data.router, prefix="/api/soil", tags=["Soil Data"])
 app.include_router(appointments.router, prefix="/api/appointments", tags=["Appointments"])
 
+
 # ------------------ Root ------------------
 
 @app.get("/")
 async def root():
     return {"message": "Agri-Lo API is running 🚀 (Python/FastAPI)"}
+
 
 # ------------------ Run Server ------------------
 
