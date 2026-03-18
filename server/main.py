@@ -20,13 +20,14 @@ from config import settings
 from services.mqtt import mqtt_service
 
 
+from services.firebase_service import firebase_service
+
 # ------------------ Create App ------------------
 
 app = FastAPI(
     title="Agri-Lo API",
     description="Backend for Agri-Lo Smart Farming App"
 )
-
 
 # ------------------ CORS (FIXED) ------------------
 
@@ -79,12 +80,18 @@ async def global_exception_handler(request: Request, exc):
 # ------------------ Startup / Shutdown ------------------
 
 @app.on_event("startup")
-async def start_db():
+async def startup_event():
+    # 1. Initialize DB
     await init_db()
+    
+    # 2. Initialize Firebase
+    firebase_service.initialize()
+    
+    # 3. Start MQTT
     mqtt_service.start()
 
 @app.on_event("shutdown")
-async def shutdown():
+async def shutdown_event():
     mqtt_service.stop()
 
 
@@ -113,14 +120,14 @@ app.include_router(appointments.router, prefix="/api/appointments", tags=["Appoi
 async def root():
     return {"message": "Agri-Lo API is running 🚀 (Python/FastAPI)"}
 
-
 # ------------------ Run Server ------------------
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 8000))
+    # Render uses PORT env var, default to 10000 for stability
+    port = int(os.environ.get("PORT", 10000))
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
         port=port,
         proxy_headers=True
-    )
+    )

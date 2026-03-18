@@ -201,18 +201,12 @@ async def refresh_token(
         "language": user.language
     }
 
-import firebase_admin
-from firebase_admin import auth as firebase_auth, credentials
+from services.firebase_service import firebase_service
+from firebase_admin import auth as firebase_auth
 from pydantic import BaseModel
 
-# Initialize Firebase Admin with explicit Project ID
-try:
-    firebase_admin.get_app()
-except ValueError:
-    # Explicitly using the project ID helps the SDK fetch the correct public keys
-    firebase_admin.initialize_app(options={
-        'projectId': 'agrilo-1e2de'
-    })
+# Ensure Firebase is initialized
+firebase_service.initialize()
 
 class FirebaseLoginRequest(BaseModel):
     idToken: str

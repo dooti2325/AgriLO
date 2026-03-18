@@ -24,7 +24,7 @@ python-dotenv
 # AI/ML (STABLE SETUP)
 tensorflow==2.15.0
 keras==2.15.0
-scikit-learn==1.4.2
+scikit-learn==1.8.0
 joblib==1.4.2
 tensorflow-model-optimization
 
@@ -42,7 +42,6 @@ httpx
 
 # Payments
 razorpay
-
 
 # Rate limiting
 slowapi

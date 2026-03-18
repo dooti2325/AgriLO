@@ -50,10 +50,14 @@ class Settings(BaseSettings):
     APP_NAME: str = "Agri-Lo API"
     APP_VERSION: str = "1.0.0"
     DEBUG: bool = True
+    PORT: int = int(os.environ.get("PORT", 10000))
 
     # MQTT Hardware
-    MQTT_BROKER: str = os.getenv("MQTT_BROKER", "localhost")
-    MQTT_PORT: int = 1883
+    MQTT_BROKER: str = os.getenv("MQTT_BROKER", "5c53b5296e584933bd06c1060b482f7d.s1.eu.hivemq.cloud")
+    MQTT_PORT: int = int(os.getenv("MQTT_PORT", 8883))
+    MQTT_USER: str = os.getenv("MQTT_USER", "Admin")
+    MQTT_PASSWORD: str = os.getenv("MQTT_PASSWORD", "QJbkE4b!Pg9A!@n")
+    MQTT_USE_TLS: bool = os.getenv("MQTT_USE_TLS", "true").lower() == "true"
     MQTT_TOPIC: str = "farm/soil/node01/data"
     SOIL_RAW_SCALE: float = 0.1 # Raw 800 -> 80 mg/kg
     
