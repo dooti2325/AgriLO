@@ -24,6 +24,7 @@ python-dotenv
 # AI/ML (STABLE SETUP)
 tensorflow==2.15.0
 keras==2.15.0
+tf_keras==2.15.1
 scikit-learn==1.8.0
 joblib
 tensorflow-model-optimization
