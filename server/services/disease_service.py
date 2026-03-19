@@ -20,17 +20,23 @@ class DiseaseService:
              return
 
         try:
-            import tensorflow_model_optimization as tfmot
             print("[INFO] Loading Leaf Disease Model (TensorFlow 2.15.0)...")
             
             if os.path.exists(settings.LEAF_MODEL_PATH):
-                # Using tf.keras consistently to avoid import conflicts
                 try:
+                    self.model = tf.keras.models.load_model(
+                        settings.LEAF_MODEL_PATH,
+                        compile=False,
+                    )
+                except Exception as load_err:
+                    print(f"[WARN] Standard model load failed, trying quantize scope: {load_err}")
+                    import tensorflow_model_optimization as tfmot
+
                     with tfmot.quantization.keras.quantize_scope():
-                        self.model = tf.keras.models.load_model(settings.LEAF_MODEL_PATH)
-                except Exception as scope_err:
-                    print(f"[WARN] Quantize scope loading failed, trying standard: {scope_err}")
-                    self.model = tf.keras.models.load_model(settings.LEAF_MODEL_PATH)
+                        self.model = tf.keras.models.load_model(
+                            settings.LEAF_MODEL_PATH,
+                            compile=False,
+                        )
                 
                 print("[INFO] Leaf Disease Model Loaded Successfully")
             else:
@@ -74,7 +80,5 @@ class DiseaseService:
         except Exception as e:
             print(f"[ERROR] Prediction Error: {e}")
             return "Internal Error", 0, {"error": str(e)}
-
-disease_service = DiseaseService()
 
 disease_service = DiseaseService()
