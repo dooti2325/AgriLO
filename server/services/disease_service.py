@@ -8,6 +8,7 @@ import tf_compat
 import tensorflow as tf
 from config import settings
 from services.treatment_service import treatment_service
+from utils.model_loader import load_model_with_compat
 
 class DiseaseService:
     def __init__(self):
@@ -24,19 +25,13 @@ class DiseaseService:
             
             if os.path.exists(settings.LEAF_MODEL_PATH):
                 try:
-                    self.model = tf.keras.models.load_model(
-                        settings.LEAF_MODEL_PATH,
-                        compile=False,
-                    )
+                    self.model = load_model_with_compat(settings.LEAF_MODEL_PATH)
                 except Exception as load_err:
                     print(f"[WARN] Standard model load failed, trying quantize scope: {load_err}")
                     import tensorflow_model_optimization as tfmot
 
                     with tfmot.quantization.keras.quantize_scope():
-                        self.model = tf.keras.models.load_model(
-                            settings.LEAF_MODEL_PATH,
-                            compile=False,
-                        )
+                        self.model = load_model_with_compat(settings.LEAF_MODEL_PATH)
                 
                 print("[INFO] Leaf Disease Model Loaded Successfully")
             else:

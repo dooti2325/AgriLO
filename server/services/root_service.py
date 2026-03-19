@@ -7,6 +7,7 @@ import io
 import json
 import os
 from config import settings
+from utils.model_loader import load_model_with_compat
 
 class RootService:
     def __init__(self):
@@ -22,19 +23,13 @@ class RootService:
             print("[INFO] Loading Root Disease Model (TensorFlow 2.15.0)...")
             if os.path.exists(settings.ROOT_MODEL_PATH):
                 try:
-                    self.model = tf.keras.models.load_model(
-                        settings.ROOT_MODEL_PATH,
-                        compile=False,
-                    )
+                    self.model = load_model_with_compat(settings.ROOT_MODEL_PATH)
                 except Exception as load_err:
                     print(f"[WARN] Standard model load failed, trying quantize scope: {load_err}")
                     import tensorflow_model_optimization as tfmot
 
                     with tfmot.quantization.keras.quantize_scope():
-                        self.model = tf.keras.models.load_model(
-                            settings.ROOT_MODEL_PATH,
-                            compile=False,
-                        )
+                        self.model = load_model_with_compat(settings.ROOT_MODEL_PATH)
                 
                 print("[INFO] Root Disease Model Loaded")
             else:
