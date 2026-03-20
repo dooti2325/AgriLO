@@ -3,33 +3,37 @@ import tf_compat
 
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
-
-from utils.limiter import limiter
+from fastapi.staticfiles import StaticFiles
 from slowapi.errors import RateLimitExceeded
 
 import uvicorn
 
-from routers import (
-    analysis, chat, auth, root_analysis,
-    analytics, support, users, soil_data, appointments
-)
-from database import init_db
 from config import settings
-from services.mqtt import mqtt_service
-
-
+from database import init_db
+from routers import (
+    analysis,
+    analytics,
+    appointments,
+    auth,
+    chat,
+    root_analysis,
+    soil_data,
+    support,
+    users,
+)
 from services.firebase_service import firebase_service
+from services.mqtt import mqtt_service
+from utils.limiter import limiter
 
 # ------------------ Create App ------------------
 
 app = FastAPI(
     title="Agri-Lo API",
-    description="Backend for Agri-Lo Smart Farming App"
+    description="Backend for Agri-Lo Smart Farming App",
 )
 
-# ------------------ CORS (FIXED) ------------------
+# ------------------ CORS ------------------
 
 app.add_middleware(
     CORSMiddleware,
@@ -47,9 +51,10 @@ async def preflight_handler():
     return {"ok": True}
 
 
-# ------------------ LIMITER SETUP (FIXED) ------------------
+# ------------------ LIMITER SETUP ------------------
 
 app.state.limiter = limiter
+
 
 @app.exception_handler(RateLimitExceeded)
 async def rate_limit_handler(request: Request, exc):
@@ -59,11 +64,11 @@ async def rate_limit_handler(request: Request, exc):
         headers={
             "Access-Control-Allow-Origin": request.headers.get("origin", "*"),
             "Access-Control-Allow-Credentials": "true",
-        }
+        },
     )
 
 
-# ------------------ GLOBAL ERROR HANDLER (VERY IMPORTANT) ------------------
+# ------------------ GLOBAL ERROR HANDLER ------------------
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc):
@@ -73,7 +78,7 @@ async def global_exception_handler(request: Request, exc):
         headers={
             "Access-Control-Allow-Origin": request.headers.get("origin", "*"),
             "Access-Control-Allow-Credentials": "true",
-        }
+        },
     )
 
 
@@ -81,14 +86,10 @@ async def global_exception_handler(request: Request, exc):
 
 @app.on_event("startup")
 async def startup_event():
-    # 1. Initialize DB
     await init_db()
-    
-    # 2. Initialize Firebase
     firebase_service.initialize()
-    
-    # 3. Start MQTT
     mqtt_service.start()
+
 
 @app.on_event("shutdown")
 async def shutdown_event():
@@ -114,20 +115,30 @@ app.include_router(soil_data.router, prefix="/api/soil", tags=["Soil Data"])
 app.include_router(appointments.router, prefix="/api/appointments", tags=["Appointments"])
 
 
-# ------------------ Root ------------------
+# ------------------ Health / Root ------------------
+
+@app.get("/health")
+async def health():
+    return {"status": "healthy"}
+
 
 @app.get("/")
 async def root():
-    return {"message": "Agri-Lo API is running 🚀 (Python/FastAPI)"}
+    return {
+        "message": "Agri-Lo API is running",
+        "status": "ok",
+        "docs": "/docs",
+        "health": "/health",
+    }
+
 
 # ------------------ Run Server ------------------
 
 if __name__ == "__main__":
-    # Render uses PORT env var, default to 10000 for stability
     port = int(os.environ.get("PORT", 10000))
     uvicorn.run(
         "main:app",
         host="0.0.0.0",
         port=port,
-        proxy_headers=True
+        proxy_headers=True,
     )

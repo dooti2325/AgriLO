@@ -1,189 +1,364 @@
 import React from 'react';
-import { useLanguage } from '../context/LanguageContext';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '../context/LanguageContext';
+
+const LIVE_SITE_URL = 'https://agri-lo-six.vercel.app';
+
+const proofStats = [
+    { label: 'Farmers supported', value: '50K+' },
+    { label: 'Disease scans served', value: '1.2M' },
+    { label: 'Crop journeys tracked', value: '50+' },
+    { label: 'Model confidence', value: '98%' },
+];
+
+const capabilities = [
+    {
+        icon: 'neurology',
+        title: 'AI diagnosis in seconds',
+        description: 'Upload a crop image and get fast disease insights with treatment guidance that is easy to act on.',
+    },
+    {
+        icon: 'sensors',
+        title: 'Sensor-driven soil intelligence',
+        description: 'Blend NPK, pH, moisture, and temperature readings into one live decision layer for the field.',
+    },
+    {
+        icon: 'chat',
+        title: 'Multilingual farming support',
+        description: 'Ask Agri-Lo questions in natural language and get practical help tuned for real farm workflows.',
+    },
+];
+
+const workflow = [
+    {
+        step: '01',
+        title: 'Capture field reality',
+        description: 'Collect soil readings or upload plant images directly from the farm.',
+    },
+    {
+        step: '02',
+        title: 'Analyze with AI and IoT',
+        description: 'Agri-Lo combines model predictions, hardware telemetry, and historical trends.',
+    },
+    {
+        step: '03',
+        title: 'Act with confidence',
+        description: 'Move from guesswork to clear next steps for yield, health, and timing.',
+    },
+];
+
+const resourceLinks = [
+    { label: 'Live website', href: LIVE_SITE_URL, icon: 'public' },
+    { label: 'Launch dashboard', href: `${LIVE_SITE_URL}/auth`, icon: 'dashboard' },
+    { label: 'Try crop scanner', href: `${LIVE_SITE_URL}/auth`, icon: 'qr_code_scanner' },
+];
 
 const LandingPage = () => {
-    const { t } = useLanguage();
+    const { language, changeLanguage } = useLanguage();
 
     return (
-        <div className="relative flex min-h-screen w-full flex-col group/design-root font-display">
-            {/* Top Navigation */}
-            <nav className="w-full bg-surface-light dark:bg-surface-dark border-b border-[#f0f4f0] dark:border-[#2a442d] sticky top-0 z-50 transition-colors duration-300">
-                <div className="px-4 md:px-10 py-3 max-w-[1280px] mx-auto flex items-center justify-between">
-                    <div className="flex items-center gap-4">
-                        <div className="size-8 text-primary">
-                            <span className="material-symbols-outlined text-3xl">spa</span>
-                        </div>
-                        <h2 className="text-lg font-bold leading-tight tracking-[-0.015em] text-text-main dark:text-white">Agri-Lo</h2>
-                    </div>
-                    <div className="hidden md:flex flex-1 justify-end gap-8 items-center">
-                        <div className="flex items-center gap-6 lg:gap-9">
-                            {/* Navigation Links can be added here if needed */}
-                        </div>
-                        <div className="flex gap-3 items-center">
-                            <Link to="/auth" className="flex items-center justify-center rounded-xl h-10 px-4 bg-primary text-text-main-light text-sm font-bold shadow-lg hover:bg-opacity-90 transition-all text-white">
-                                <span className="truncate">Login / Sign Up</span>
+        <div className="min-h-screen bg-[#f4efe4] text-slate-950">
+            <div className="relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(22,163,74,0.22),_transparent_30%),radial-gradient(circle_at_top_right,_rgba(245,158,11,0.18),_transparent_25%),linear-gradient(180deg,_#f4efe4_0%,_#f7f5ef_45%,_#ffffff_100%)]" />
+                <div className="absolute inset-x-0 top-0 h-28 bg-[linear-gradient(180deg,_rgba(15,23,42,0.12),_transparent)]" />
+
+                <header className="relative z-10 border-b border-black/5">
+                    <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-5 md:px-8">
+                        <Link to="/" className="flex items-center gap-3">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-slate-950 text-lime-300 shadow-[0_16px_40px_rgba(15,23,42,0.16)]">
+                                <span className="material-symbols-outlined text-[28px]">spa</span>
+                            </div>
+                            <div>
+                                <p className="text-xs font-bold uppercase tracking-[0.35em] text-emerald-700">Agri-Lo</p>
+                                <p className="text-sm text-slate-600">AI farming command center</p>
+                            </div>
+                        </Link>
+
+                        <div className="hidden items-center gap-3 md:flex">
+                            <a
+                                href={LIVE_SITE_URL}
+                                target="_blank"
+                                rel="noreferrer"
+                                className="rounded-full border border-emerald-900/10 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-700 backdrop-blur transition hover:-translate-y-0.5 hover:border-emerald-500 hover:text-emerald-700"
+                            >
+                                Visit Live Site
+                            </a>
+                            <select
+                                aria-label="Language Selector"
+                                value={language}
+                                onChange={(event) => changeLanguage(event.target.value)}
+                                className="rounded-full border border-emerald-900/10 bg-white/80 px-4 py-2 text-sm font-semibold text-slate-700 outline-none backdrop-blur transition hover:border-emerald-500"
+                            >
+                                <option value="en">English</option>
+                                <option value="hi">Hindi</option>
+                                <option value="mr">Marathi</option>
+                            </select>
+                            <Link
+                                to="/auth"
+                                className="rounded-full bg-slate-950 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_18px_35px_rgba(15,23,42,0.18)] transition hover:-translate-y-0.5 hover:bg-emerald-700"
+                            >
+                                Sign In
                             </Link>
-                            <button aria-label="Language Selector" className="flex items-center justify-center rounded-xl h-10 w-10 bg-[#f0f4f0] dark:bg-[#2a442d] hover:bg-[#e0e4e0] dark:hover:bg-[#3a553d] text-text-main-light dark:text-text-primary-dark transition-colors">
-                                <span className="material-symbols-outlined text-[20px]">language</span>
-                            </button>
                         </div>
                     </div>
-                    {/* Mobile Menu Button can be hooked up if state is managed */}
-                    <button className="md:hidden p-2 text-text-main dark:text-white">
-                        <span className="material-symbols-outlined">menu</span>
-                    </button>
-                </div>
-            </nav>
+                </header>
 
-            <main className="flex-grow flex flex-col items-center w-full bg-background-light dark:bg-background-dark">
-                {/* Hero Section */}
-                <section className="w-full max-w-[1280px] px-4 md:px-10 py-12 md:py-20 lg:py-24">
-                    <div className="@container">
-                        <div className="flex flex-col-reverse lg:flex-row gap-10 items-center">
-                            {/* Hero Content */}
-                            <div className="flex flex-col gap-6 lg:w-1/2 items-start text-left">
-                                <div className="flex flex-col gap-4">
-                                    <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight tracking-[-0.033em] text-text-main dark:text-white">
-                                        Smart Farming with <span className="text-primary">AI</span>
-                                    </h1>
-                                    <h2 className="text-base sm:text-lg text-text-light dark:text-text-secondary-dark font-normal leading-relaxed max-w-lg">
-                                        Detect plant diseases instantly and get expert farming advice with Agri-Lo. Your personal agronomist in your pocket.
-                                    </h2>
-                                </div>
-                                <div className="flex flex-wrap gap-3 w-full sm:w-auto">
-                                    <Link to="/detect" className="flex items-center justify-center gap-2 rounded-xl h-12 px-6 bg-primary text-text-main-light text-base font-bold shadow-lg shadow-primary/20 hover:translate-y-[-2px] hover:shadow-xl transition-all w-full sm:w-auto text-white">
-                                        <span className="material-symbols-outlined text-[20px]">qr_code_scanner</span>
-                                        <span>Scan Your Crop</span>
-                                    </Link>
-                                    <button className="flex items-center justify-center gap-2 rounded-xl h-12 px-6 bg-white dark:bg-surface-dark border border-[#dbe6dc] dark:border-[#2a442d] text-text-main dark:text-white text-base font-bold hover:bg-[#f0f4f0] dark:hover:bg-[#233f26] transition-all w-full sm:w-auto">
-                                        <span className="material-symbols-outlined text-[20px]">play_circle</span>
-                                        <span>Watch Demo</span>
-                                    </button>
-                                </div>
-                                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-[#f0f4f0] dark:border-[#2a442d]">
-                                    {/* Trusted by section */}
-                                    <p className="text-sm font-medium text-text-light dark:text-text-secondary-dark">Trusted by <span className="text-primary font-bold">50,000+</span> farmers</p>
-                                </div>
+                <main className="relative z-10">
+                    <section className="mx-auto grid max-w-7xl gap-10 px-4 py-14 md:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center lg:py-20">
+                        <div className="space-y-8">
+                            <div className="inline-flex items-center gap-2 rounded-full border border-emerald-900/10 bg-white/70 px-4 py-2 text-sm font-semibold text-emerald-800 backdrop-blur">
+                                <span className="material-symbols-outlined text-[18px]">public</span>
+                                <a href={LIVE_SITE_URL} target="_blank" rel="noreferrer" className="hover:text-emerald-600">
+                                    Live now at agri-lo-six.vercel.app
+                                </a>
                             </div>
-                            {/* Hero Image */}
-                            <div className="lg:w-1/2 w-full">
-                                <div className="relative rounded-2xl overflow-hidden aspect-[4/3] shadow-2xl shadow-emerald-900/10 dark:shadow-black/20 group">
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent z-10"></div>
-                                    <div className="w-full h-full bg-cover bg-center transition-transform duration-700 group-hover:scale-105" style={{ backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuCWQZmtRIsl8O59TKNx4iASLJC97ldFHiHJeA_0NAsHwbJsJC9TTU6tzO93UkujqqtZFCyqa_aJlUJq7hOOz8b-KOAnaAzjdZNwuW5G1BLunLWSJbCwsTjTE5AbwPnkfdUAFBLn-x4Kbz8HcB6wwHc53DEVY-8kVh0NYGak8ayXeLe03Mrd0t4VEM3TYJVjnTp4KSMxuzR940laZEA4zTD8FAC-D9cqC6W0aPNJUs8gPjg5IGdeTTlB_NVhnh8vpTXmFZNIAYV-Vr5k')` }}></div>
 
-                                    {/* Floating Card */}
-                                    <div className="absolute bottom-6 left-6 right-6 z-20 bg-white/95 dark:bg-surface-dark/95 backdrop-blur-md rounded-xl p-4 shadow-lg border border-white/20 dark:border-white/10 flex items-center gap-4 animate-fade-in-up">
-                                        <div className="size-12 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center text-green-600 dark:text-green-400">
-                                            <span className="material-symbols-outlined text-[28px]">check_circle</span>
+                            <div className="space-y-5">
+                                <p className="max-w-md text-sm font-bold uppercase tracking-[0.32em] text-amber-700">
+                                    Precision agriculture, designed to feel human
+                                </p>
+                                <h1 className="max-w-3xl text-5xl font-black leading-[0.95] tracking-[-0.05em] text-slate-950 md:text-6xl xl:text-7xl">
+                                    Smarter crops start with a calmer, clearer farming workflow.
+                                </h1>
+                                <p className="max-w-2xl text-lg leading-8 text-slate-600 md:text-xl">
+                                    Agri-Lo turns image diagnosis, soil telemetry, multilingual guidance, and analytics into one experience farmers can trust from field to harvest.
+                                </p>
+                            </div>
+
+                            <div className="flex flex-col gap-3 sm:flex-row">
+                                <Link
+                                    to="/auth"
+                                    className="inline-flex items-center justify-center gap-2 rounded-full bg-emerald-600 px-6 py-4 text-base font-bold text-white shadow-[0_22px_40px_rgba(5,150,105,0.30)] transition hover:-translate-y-0.5 hover:bg-emerald-700"
+                                >
+                                    Open Agri-Lo
+                                    <span className="material-symbols-outlined text-[20px]">arrow_forward</span>
+                                </Link>
+                                <a
+                                    href={LIVE_SITE_URL}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="inline-flex items-center justify-center gap-2 rounded-full border border-slate-950/10 bg-white px-6 py-4 text-base font-bold text-slate-800 shadow-[0_18px_35px_rgba(15,23,42,0.08)] transition hover:-translate-y-0.5 hover:border-amber-500 hover:text-amber-700"
+                                >
+                                    Visit live deployment
+                                    <span className="material-symbols-outlined text-[20px]">open_in_new</span>
+                                </a>
+                            </div>
+
+                            <div className="grid gap-3 sm:grid-cols-3">
+                                {resourceLinks.map((link) => (
+                                    <a
+                                        key={link.label}
+                                        href={link.href}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="rounded-3xl border border-white/70 bg-white/75 p-4 shadow-[0_18px_40px_rgba(15,23,42,0.07)] backdrop-blur transition hover:-translate-y-1 hover:shadow-[0_24px_45px_rgba(15,23,42,0.12)]"
+                                    >
+                                        <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-lime-100 text-emerald-800">
+                                            <span className="material-symbols-outlined text-[22px]">{link.icon}</span>
                                         </div>
+                                        <p className="text-base font-bold text-slate-900">{link.label}</p>
+                                        <p className="mt-1 text-sm text-slate-500">{LIVE_SITE_URL.replace('https://', '')}</p>
+                                    </a>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="relative">
+                            <div className="absolute -left-6 top-8 hidden h-40 w-40 rounded-full bg-amber-300/40 blur-3xl lg:block" />
+                            <div className="absolute -right-8 bottom-8 hidden h-48 w-48 rounded-full bg-emerald-300/30 blur-3xl lg:block" />
+
+                            <div className="relative overflow-hidden rounded-[2rem] border border-slate-950/10 bg-slate-950 p-5 text-white shadow-[0_30px_80px_rgba(15,23,42,0.30)]">
+                                <div className="absolute inset-0 bg-[linear-gradient(145deg,_rgba(16,185,129,0.18),_transparent_35%,_rgba(245,158,11,0.16)_100%)]" />
+                                <div className="relative space-y-5">
+                                    <div className="flex items-center justify-between">
                                         <div>
-                                            <p className="text-xs text-text-light dark:text-text-secondary-dark font-medium uppercase tracking-wider">Status</p>
-                                            <p className="text-lg font-bold text-text-main dark:text-white">Healthy Crop Detected</p>
+                                            <p className="text-xs font-bold uppercase tracking-[0.3em] text-lime-300">Live crop intelligence</p>
+                                            <h2 className="mt-2 text-2xl font-bold">Field snapshot</h2>
+                                        </div>
+                                        <div className="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold text-lime-200">
+                                            Online
+                                        </div>
+                                    </div>
+
+                                    <div className="grid gap-4 rounded-[1.6rem] bg-white/8 p-4 md:grid-cols-[1.1fr_0.9fr]">
+                                        <div className="rounded-[1.4rem] border border-white/10 bg-[url('https://images.unsplash.com/photo-1464226184884-fa280b87c399?auto=format&fit=crop&w=1200&q=80')] bg-cover bg-center min-h-[320px]">
+                                            <div className="flex h-full flex-col justify-between bg-[linear-gradient(180deg,_rgba(15,23,42,0.08),_rgba(15,23,42,0.72))] p-5">
+                                                <div className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.28em] text-white/75">
+                                                    <span>Plot 07</span>
+                                                    <span>Tomato crop</span>
+                                                </div>
+                                                <div className="rounded-[1.4rem] bg-white/12 p-4 backdrop-blur">
+                                                    <p className="text-xs uppercase tracking-[0.28em] text-lime-200">Diagnosis</p>
+                                                    <p className="mt-2 text-2xl font-bold">Healthy growth pattern detected</p>
+                                                    <p className="mt-2 text-sm leading-6 text-white/75">
+                                                        Disease scan, soil profile, and advisory history are all aligned for a stable growth cycle.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="space-y-4">
+                                            <div className="rounded-[1.4rem] bg-white px-5 py-4 text-slate-950">
+                                                <p className="text-xs font-bold uppercase tracking-[0.28em] text-emerald-700">Sensor pulse</p>
+                                                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                                                    <div className="rounded-2xl bg-emerald-50 p-3">
+                                                        <p className="text-slate-500">Moisture</p>
+                                                        <p className="mt-1 text-2xl font-black">68%</p>
+                                                    </div>
+                                                    <div className="rounded-2xl bg-amber-50 p-3">
+                                                        <p className="text-slate-500">pH</p>
+                                                        <p className="mt-1 text-2xl font-black">6.7</p>
+                                                    </div>
+                                                    <div className="rounded-2xl bg-lime-50 p-3">
+                                                        <p className="text-slate-500">Nitrogen</p>
+                                                        <p className="mt-1 text-2xl font-black">112</p>
+                                                    </div>
+                                                    <div className="rounded-2xl bg-sky-50 p-3">
+                                                        <p className="text-slate-500">Temp</p>
+                                                        <p className="mt-1 text-2xl font-black">27C</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div className="rounded-[1.4rem] border border-white/10 bg-white/8 p-5">
+                                                <div className="flex items-center gap-3">
+                                                    <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-lime-300 text-slate-950">
+                                                        <span className="material-symbols-outlined">support_agent</span>
+                                                    </div>
+                                                    <div>
+                                                        <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/60">Agri assistant</p>
+                                                        <p className="text-lg font-bold">Next best action</p>
+                                                    </div>
+                                                </div>
+                                                <p className="mt-4 text-sm leading-7 text-white/75">
+                                                    Maintain irrigation rhythm, continue weekly image checks, and schedule a soil report before the next fertilizer cycle.
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                {/* Stats Section */}
-                <section className="w-full bg-[#f0f4f0] dark:bg-[#152b17] py-12">
-                    <div className="max-w-[1280px] mx-auto px-4 md:px-10">
-                        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-                            {[
-                                { icon: 'groups', label: 'Farmers Helped', value: '50,000+' },
-                                { icon: 'bug_report', label: 'Diseases Detected', value: '1.2M' },
-                                { icon: 'grass', label: 'Crops Covered', value: '50+' },
-                                { icon: 'verified', label: 'Accuracy Rate', value: '98%' },
-                            ].map((stat, index) => (
-                                <div key={index} className="flex flex-col gap-1 p-6 bg-white dark:bg-surface-dark rounded-xl shadow-sm border border-transparent dark:border-[#2a442d] hover:border-primary/30 transition-colors">
-                                    <div className="flex items-center gap-2 mb-2 text-primary">
-                                        <span className="material-symbols-outlined">{stat.icon}</span>
-                                    </div>
-                                    <p className="text-text-light dark:text-text-secondary-dark text-sm font-medium">{stat.label}</p>
-                                    <p className="text-3xl font-bold tracking-tight text-text-main dark:text-white">{stat.value}</p>
+                    <section className="mx-auto max-w-7xl px-4 pb-8 md:px-8">
+                        <div className="grid gap-4 rounded-[2rem] border border-slate-950/5 bg-white/85 p-6 shadow-[0_20px_50px_rgba(15,23,42,0.08)] md:grid-cols-4">
+                            {proofStats.map((stat) => (
+                                <div key={stat.label} className="rounded-[1.4rem] bg-[#f8f5ed] p-5">
+                                    <p className="text-sm font-semibold uppercase tracking-[0.22em] text-slate-500">{stat.label}</p>
+                                    <p className="mt-3 text-4xl font-black tracking-[-0.04em] text-slate-950">{stat.value}</p>
                                 </div>
                             ))}
                         </div>
-                    </div>
-                </section>
+                    </section>
 
-                {/* Features Section */}
-                <section className="w-full max-w-[1280px] px-4 md:px-10 py-16 md:py-24">
-                    <div className="flex flex-col items-center text-center gap-4 mb-16">
-                        <span className="text-primary font-bold tracking-wider uppercase text-sm">Features</span>
-                        <h2 className="text-3xl md:text-4xl font-black leading-tight max-w-2xl text-text-main dark:text-white">
-                            Why Choose Agri-Lo?
-                        </h2>
-                        <p className="text-text-light dark:text-text-secondary-dark text-lg max-w-2xl">
-                            Empowering farmers with cutting-edge technology for better yields and healthier crops.
-                        </p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        {[
-                            { icon: 'photo_camera', title: 'AI Disease Detection', desc: 'Instantly identify crop diseases by taking a photo and get AI-driven treatment suggestions.' },
-                            { icon: 'ssid_chart', title: 'Crop Analytics', desc: 'Track weather patterns, soil health, and growth stages to optimize your harvest schedule.' },
-                            { icon: 'smart_toy', title: 'AI Assistant', desc: 'Chat with our AI bot to get answers to all your farming queries in your local language.' },
-                        ].map((feature, index) => (
-                            <div key={index} className="flex flex-col gap-4 rounded-2xl border border-[#dbe6dc] dark:border-[#2a442d] bg-white dark:bg-surface-dark p-8 hover:shadow-xl hover:border-primary/50 transition-all duration-300 group">
-                                <div className="w-14 h-14 rounded-full bg-[#f0f4f0] dark:bg-[#2a442d] flex items-center justify-center text-primary group-hover:scale-110 transition-transform">
-                                    <span className="material-symbols-outlined text-[32px]">{feature.icon}</span>
-                                </div>
-                                <div className="flex flex-col gap-2 mt-2">
-                                    <h3 className="text-xl font-bold text-text-main dark:text-white">{feature.title}</h3>
-                                    <p className="text-text-light dark:text-text-secondary-dark leading-relaxed">{feature.desc}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </section>
-
-                {/* CTA Section */}
-                <section className="w-full px-4 md:px-10 py-10 mb-10">
-                    <div className="max-w-[1280px] mx-auto rounded-[2rem] overflow-hidden relative">
-                        <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: `url('https://lh3.googleusercontent.com/aida-public/AB6AXuBIfanTFvP8BjJIHoVhMXXgBDaa9lFsx8WoHbD7jasiPIvsIfGE7W8ejuIwFHANq6UwUJjkRxS0OTmzsigQyjmE3skgfjQANF1SgTK9nrISm1d396jgIW44F6GBcI6XL17vksCBVrgsEF29mxIaLCJMbFw-2c94CQHoln72mBSfLQ5SToqIyKTm9ecxQ1MU1yT9USVfkgpUxlalS2L2Fr89EJtt9IArttQbXbEefp4qtctxtaBBGMgO4uGHXcNOpcQ7TtuEgEIrbHxD')` }}></div>
-                        <div className="absolute inset-0 bg-background-dark/80 backdrop-blur-[2px]"></div>
-                        <div className="relative z-10 flex flex-col items-center justify-center text-center gap-8 py-20 px-6">
-                            <div className="flex flex-col gap-4 max-w-2xl">
-                                <h2 className="text-3xl md:text-5xl font-black text-white leading-tight">
-                                    Ready to improve your yield?
+                    <section className="mx-auto max-w-7xl px-4 py-16 md:px-8">
+                        <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+                            <div className="space-y-5">
+                                <p className="text-sm font-bold uppercase tracking-[0.32em] text-emerald-700">Why teams remember this product</p>
+                                <h2 className="max-w-xl text-4xl font-black tracking-[-0.04em] text-slate-950 md:text-5xl">
+                                    The platform feels premium because it solves real agricultural friction.
                                 </h2>
-                                <p className="text-gray-200 text-lg md:text-xl font-normal leading-relaxed">
-                                    Join thousands of farmers using Agri-Lo today to make smarter decisions for a better harvest.
+                                <p className="max-w-xl text-lg leading-8 text-slate-600">
+                                    Agri-Lo is not just another dashboard. It brings together AI diagnosis, soil sensing, analytics, and multilingual help in a workflow that feels coherent from the first click.
                                 </p>
                             </div>
-                            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
-                                <Link to="/auth" className="flex items-center justify-center gap-2 rounded-xl h-14 px-8 bg-primary text-text-main-light text-lg font-bold shadow-lg hover:bg-green-400 hover:scale-105 transition-all text-white">
-                                    <span>Get Started for Free</span>
-                                    <span className="material-symbols-outlined text-[24px]">arrow_forward</span>
-                                </Link>
-                                <button className="flex items-center justify-center gap-2 rounded-xl h-14 px-8 bg-white/10 backdrop-blur-sm border border-white/30 text-white text-lg font-bold hover:bg-white/20 transition-all">
-                                    <span>Contact Sales</span>
-                                </button>
+
+                            <div className="grid gap-5 md:grid-cols-3">
+                                {capabilities.map((item) => (
+                                    <div
+                                        key={item.title}
+                                        className="rounded-[1.8rem] border border-slate-950/8 bg-white p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] transition hover:-translate-y-1 hover:shadow-[0_24px_55px_rgba(15,23,42,0.12)]"
+                                    >
+                                        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-slate-950 text-lime-300">
+                                            <span className="material-symbols-outlined text-[26px]">{item.icon}</span>
+                                        </div>
+                                        <h3 className="mt-5 text-xl font-bold text-slate-950">{item.title}</h3>
+                                        <p className="mt-3 text-base leading-7 text-slate-600">{item.description}</p>
+                                    </div>
+                                ))}
                             </div>
                         </div>
-                    </div>
-                </section>
-            </main>
+                    </section>
 
-            <footer className="w-full bg-white dark:bg-surface-dark border-t border-[#f0f4f0] dark:border-[#2a442d] py-12">
-                <div className="max-w-[1280px] mx-auto px-4 md:px-10 flex flex-col md:flex-row justify-between items-center gap-6 text-center md:text-left">
-                    <div className="flex items-center gap-3">
-                        <div className="size-6 text-primary">
-                            <span className="material-symbols-outlined">spa</span>
+                    <section className="mx-auto max-w-7xl px-4 py-6 md:px-8">
+                        <div className="rounded-[2.2rem] bg-slate-950 px-6 py-10 text-white shadow-[0_28px_70px_rgba(15,23,42,0.24)] md:px-10">
+                            <div className="grid gap-8 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
+                                <div className="space-y-4">
+                                    <p className="text-sm font-bold uppercase tracking-[0.32em] text-lime-300">Simple operating rhythm</p>
+                                    <h2 className="text-4xl font-black tracking-[-0.04em]">From field data to action in three moves.</h2>
+                                    <p className="text-base leading-8 text-white/72">
+                                        The experience is designed to reduce hesitation. Every step nudges the user toward a practical next decision.
+                                    </p>
+                                </div>
+                                <div className="grid gap-4 md:grid-cols-3">
+                                    {workflow.map((item) => (
+                                        <div key={item.step} className="rounded-[1.6rem] border border-white/10 bg-white/8 p-5 backdrop-blur">
+                                            <p className="text-sm font-black tracking-[0.26em] text-amber-300">{item.step}</p>
+                                            <h3 className="mt-4 text-xl font-bold">{item.title}</h3>
+                                            <p className="mt-3 text-sm leading-7 text-white/72">{item.description}</p>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
-                        <span className="text-xl font-bold tracking-tight text-text-main dark:text-white">Agri-Lo</span>
+                    </section>
+
+                    <section className="mx-auto max-w-7xl px-4 py-16 md:px-8">
+                        <div className="overflow-hidden rounded-[2.4rem] border border-slate-950/8 bg-[linear-gradient(135deg,_#14532d_0%,_#1f2937_52%,_#111827_100%)] px-6 py-12 text-white shadow-[0_28px_70px_rgba(15,23,42,0.22)] md:px-10">
+                            <div className="grid gap-8 lg:grid-cols-[1fr_auto] lg:items-center">
+                                <div className="space-y-4">
+                                    <p className="text-sm font-bold uppercase tracking-[0.32em] text-lime-300">Ready to share the project</p>
+                                    <h2 className="max-w-3xl text-4xl font-black tracking-[-0.04em] md:text-5xl">
+                                        Explore the live product, then bring people back here with a repo that looks the part.
+                                    </h2>
+                                    <p className="max-w-2xl text-lg leading-8 text-white/72">
+                                        The landing page, README, and deployment story now all point to the same place so your project feels cohesive in demos, GitHub, and production.
+                                    </p>
+                                </div>
+                                <div className="flex flex-col gap-3 sm:flex-row lg:flex-col">
+                                    <a
+                                        href={LIVE_SITE_URL}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="inline-flex items-center justify-center gap-2 rounded-full bg-lime-300 px-6 py-4 text-base font-bold text-slate-950 transition hover:-translate-y-0.5 hover:bg-lime-200"
+                                    >
+                                        Open live site
+                                        <span className="material-symbols-outlined text-[20px]">north_east</span>
+                                    </a>
+                                    <Link
+                                        to="/auth"
+                                        className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/8 px-6 py-4 text-base font-bold text-white transition hover:-translate-y-0.5 hover:bg-white/14"
+                                    >
+                                        Enter app
+                                        <span className="material-symbols-outlined text-[20px]">login</span>
+                                    </Link>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </main>
+
+                <footer className="border-t border-slate-950/8 bg-white/80 backdrop-blur">
+                    <div className="mx-auto flex max-w-7xl flex-col gap-5 px-4 py-8 text-sm text-slate-600 md:flex-row md:items-center md:justify-between md:px-8">
+                        <div>
+                            <p className="font-bold uppercase tracking-[0.28em] text-slate-900">Agri-Lo</p>
+                            <p className="mt-1">AI + IoT farming assistant built for better field decisions.</p>
+                        </div>
+                        <div className="flex flex-wrap items-center gap-4">
+                            <a href={LIVE_SITE_URL} target="_blank" rel="noreferrer" className="font-semibold text-emerald-700 hover:text-emerald-600">
+                                agri-lo-six.vercel.app
+                            </a>
+                            <a href={`${LIVE_SITE_URL}/auth`} target="_blank" rel="noreferrer" className="font-semibold text-slate-700 hover:text-slate-950">
+                                App access
+                            </a>
+                            <a href={`${LIVE_SITE_URL}/#top`} target="_blank" rel="noreferrer" className="font-semibold text-slate-700 hover:text-slate-950">
+                                Share link
+                            </a>
+                        </div>
                     </div>
-                    <p className="text-text-light dark:text-text-secondary-dark text-sm">© 2026 Agri-Lo. All rights reserved.</p>
-                    <div className="flex gap-6">
-                        <a href="#" className="text-text-light dark:text-text-secondary-dark hover:text-primary transition-colors">Privacy</a>
-                        <a href="#" className="text-text-light dark:text-text-secondary-dark hover:text-primary transition-colors">Terms</a>
-                        <a href="#" className="text-text-light dark:text-text-secondary-dark hover:text-primary transition-colors">Support</a>
-                    </div>
-                </div>
-            </footer>
+                </footer>
+            </div>
         </div>
     );
 };
